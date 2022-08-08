@@ -36,5 +36,9 @@ public class PeopleService : IPeopleService
 		var result = _mapper.Map<PersonRto>(person);
 		await _repository.AddPerson(result);
 	}
+	public async Task DeletePerson(int passport)
+	{
+		await _repository.DeletePerson(passport);
+	}
 
 }

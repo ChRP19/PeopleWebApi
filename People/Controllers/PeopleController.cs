@@ -44,4 +44,17 @@ public class PeopleController : ControllerBase
 
 		return CreatedAtAction(nameof(GetPerson), new { passport = person.Passport }, person);
 	}
+
+	[HttpDelete("{passport}")]
+	public async Task<ActionResult> DeletePerson(int passport)
+	{
+		var person = _service.GetPerson(passport);
+
+		if (person is not null)
+		{
+			await _service.DeletePerson(passport);
+			return Ok();
+		}
+		return NotFound();
+	}
 }

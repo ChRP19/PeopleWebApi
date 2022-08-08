@@ -37,5 +37,14 @@ public class PeopleRepository : IPeopleRepository
 		_context.Persons.Add(person);
 		await _context.SaveChangesAsync();
 	}
-	
+	public async Task DeletePerson(int passport)
+	{
+		var person = await _context.Persons
+			.AsNoTracking()
+			.SingleOrDefaultAsync(p => p.Passport == passport);
+		if (person is null) return;
+		_context.Persons.Remove(person);
+		await _context.SaveChangesAsync();
+	}
+
 }
