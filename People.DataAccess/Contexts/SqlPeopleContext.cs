@@ -8,7 +8,7 @@ namespace People.DataAccess.Contexts;
 public class SqlPeopleContext : DbContext
 {
 	public DbSet<PersonRto> Persons { get; set; }
-	public DbSet<ChildrenRto> Childrens { get; set; }
+	public DbSet<ChildrenRto> Children { get; set; }
 	public DbSet<ToyRto> Toys { get; set; }
 
 	public SqlPeopleContext(DbContextOptions<SqlPeopleContext> options)

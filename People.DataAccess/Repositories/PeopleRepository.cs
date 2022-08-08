@@ -13,7 +13,7 @@ public class PeopleRepository : IPeopleRepository
 
 	public async Task<List<ChildrenRto>> GetChildrenList(int schoolNumber)
 	{
-		var result = _context.Childrens
+		var result = _context.Children
 			.AsNoTracking()
 			.Where(c => c.SchoolNumber == schoolNumber)
 			.ToList();

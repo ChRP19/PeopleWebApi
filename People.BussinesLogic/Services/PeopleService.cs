@@ -31,7 +31,7 @@ public class PeopleService : IPeopleService
 		var result = _repository.GetAllPerson();
 		return _mapper.Map<IEnumerable<PersonRto>, IEnumerable<PersonBlo>>(await result);
 	}
-	public async Task AddPerson(PersonBlo person)
+	public async Task CreatePerson(PersonBlo person)
 	{
 		var result = _mapper.Map<PersonRto>(person);
 		await _repository.AddPerson(result);
