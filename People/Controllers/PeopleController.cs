@@ -20,15 +20,21 @@ public class PeopleController : ControllerBase
 	[HttpGet]
 	[ProducesResponseType(typeof(List<ChildrenBlo>), 200)]
 	[ProducesResponseType(404)]
-	public Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber, DateTimeOffset dateOfBirth)
+	public Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber)
 	{
-		return _service.GetChildrenList(schoolNumber, dateOfBirth);
+		return _service.GetChildrenList(schoolNumber);
 	}
 	
-	[HttpGet("/api/v1/Persons/{passport}")]
+	[HttpGet("/api/v1/Person/{passport}")]
 	public Task<PersonBlo> GetPerson(int passport)
 	{
 		return _service.GetPerson(passport);
+	}
+
+	[HttpGet("/api/v1/Persons")]
+	public Task<IEnumerable<PersonBlo>> GetAllPersons()
+	{
+		return _service.GetAllPerson();
 	}
 
 	[HttpPost]

@@ -16,15 +16,20 @@ public class PeopleService : IPeopleService
 		_mapper = mapper;
 	}
 	
-	public async Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber, DateTimeOffset dateOfBirth)
+	public async Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber)
 	{
-		var result = _repository.GetChildrenList(schoolNumber, dateOfBirth);
+		var result = _repository.GetChildrenList(schoolNumber);
 		return _mapper.Map<List<ChildrenRto>, List<ChildrenBlo>>(await result);
 	}
 	public async Task<PersonBlo?> GetPerson(int passport)
 	{
 		var result = _repository.GetPerson(passport);
 		return _mapper.Map<PersonRto, PersonBlo>(await result);
+	}
+	public async Task<IEnumerable<PersonBlo?>> GetAllPerson()
+	{
+		var result = _repository.GetAllPerson();
+		return _mapper.Map<IEnumerable<PersonRto>, IEnumerable<PersonBlo>>(await result);
 	}
 	public async Task AddPerson(PersonBlo person)
 	{

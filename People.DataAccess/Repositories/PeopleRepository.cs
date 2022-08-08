@@ -8,16 +8,14 @@ namespace People.DataAccess.Repositories;
 public class PeopleRepository : IPeopleRepository
 {
 	private readonly SqlPeopleContext _context;
-	public PeopleRepository(SqlPeopleContext context)
-	{
+	public PeopleRepository(SqlPeopleContext context) =>
 		_context = context;
-	}
-	
-	public async Task<List<ChildrenRto>> GetChildrenList(int schoolNumber, DateTimeOffset dateOfBirth)
+
+	public async Task<List<ChildrenRto>> GetChildrenList(int schoolNumber)
 	{
 		var result = _context.Childrens
 			.AsNoTracking()
-			.Where(c => c.SchoolNumber == schoolNumber && c.DateOfBirth == dateOfBirth)
+			.Where(c => c.SchoolNumber == schoolNumber)
 			.ToList();
 		return result;
 	}
@@ -25,8 +23,14 @@ public class PeopleRepository : IPeopleRepository
 	{
 		var result = _context.Persons
 			.AsNoTracking()
-			.FirstOrDefaultAsync(p => p.Passport == passport);
+			.SingleOrDefaultAsync(p => p.Passport == passport);
 		return await result;
+	}
+	public async Task<IEnumerable<PersonRto?>> GetAllPerson()
+	{
+		return _context.Persons
+			.AsNoTracking()
+			.ToList();
 	}
 	public async Task AddPerson(PersonRto person)
 	{
