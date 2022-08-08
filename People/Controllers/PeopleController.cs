@@ -17,7 +17,7 @@ public class PeopleController : ControllerBase
 		_service = service;
 	}
 
-	[HttpGet]
+	[HttpGet("/api/v1/Children")]
 	[ProducesResponseType(typeof(List<ChildrenBlo>), 200)]
 	[ProducesResponseType(404)]
 	public Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber)
@@ -37,11 +37,11 @@ public class PeopleController : ControllerBase
 		return _service.GetAllPerson();
 	}
 
-	[HttpPost]
-	public async Task<ActionResult<PersonBlo>> PostPerson(PersonBlo person)
+	[HttpPost("/api/v1/Person")]
+	public async Task<ActionResult<PersonBlo>> CreatePerson(PersonBlo person)
 	{
-		await _service.AddPerson(person);
+		await _service.CreatePerson(person);
 
-		return Created("", person);
+		return CreatedAtAction(nameof(GetPerson), new { passport = person.Passport }, person);
 	}
 }
