@@ -25,7 +25,7 @@ public class PeopleController : ControllerBase
 		return _service.GetChildrenList(schoolNumber);
 	}
 	
-	[HttpGet("/api/v1/Person/{passport}")]
+	[HttpGet("/api/v1/Persons/{passport}")]
 	public async Task<PersonBlo> GetPerson(int passport)
 	{
 		return await _service.GetPerson(passport);
@@ -37,7 +37,7 @@ public class PeopleController : ControllerBase
 		return await _service.GetAllPerson();
 	}
 
-	[HttpPost("/api/v1/Person/Create")]
+	[HttpPost("/api/v1/Persons/Create")]
 	public async Task<ActionResult<PersonBlo>> CreatePerson(PersonBlo person)
 	{
 		await _service.CreatePerson(person);
@@ -45,7 +45,7 @@ public class PeopleController : ControllerBase
 		return CreatedAtAction(nameof(GetPerson), new { passport = person.Passport }, person);
 	}
 
-	[HttpDelete("/api/v1/Person/Delete/{passport}")]
+	[HttpDelete("/api/v1/Persons/Delete/{passport}")]
 	public async Task<ActionResult> DeletePerson(int passport)
 	{
 		var person = await _service.GetPerson(passport);
