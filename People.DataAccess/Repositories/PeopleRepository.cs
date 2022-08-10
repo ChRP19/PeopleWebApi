@@ -21,10 +21,10 @@ public class PeopleRepository : IPeopleRepository
 	}
 	public async Task<PersonRto?> GetPerson(int passport)
 	{
-		var result = _context.Persons
+		var result = await _context.Persons
 			.AsNoTracking()
 			.SingleOrDefaultAsync(p => p.Passport == passport);
-		return await result;
+		return result;
 	}
 	public async Task<IEnumerable<PersonRto?>> GetAllPerson()
 	{
