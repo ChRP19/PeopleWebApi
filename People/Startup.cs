@@ -1,6 +1,4 @@
 using System;
-using System.Reflection;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,6 @@ using People.BussinesLogic.Services;
 using People.DataAccess.Contexts;
 using People.DataAccess.Repositories;
 using People.DataAccess.Rto.Interfaces;
-using People.Mappings;
 
 namespace People
 {
@@ -29,11 +26,21 @@ namespace People
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
-			services.AddSwaggerGen(c =>
+			services.AddControllers().ConfigureApiBehaviorOptions(x => { x.SuppressMapClientErrors = true; });
+			
+			services.AddSwaggerDocument(config =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "People", Version = "v1" });
+				config.PostProcess = document =>
+				{
+					document.Info.Version = "v1";
+					document.Info.Title = "People API";
+					document.Info.Description = "A simple ASP.NET Core web API";
+				};
 			});
+			// services.AddSwaggerGen(c =>
+			// {
+			// 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "People", Version = "v1" });
+			// });
 			
 			string connectionString = Configuration.GetConnectionString(nameof(SqlPeopleContext));
 
@@ -57,9 +64,11 @@ namespace People
 		{
 			if(env.IsDevelopment())
 			{
-				app.UseDeveloperExceptionPage();
-				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "People v1"));
+				app.UseOpenApi();
+				app.UseSwaggerUi3();
+				// app.UseDeveloperExceptionPage();
+				// app.UseSwagger();
+				// app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "People v1"));
 			}
 
 			app.UseHttpsRedirection();
