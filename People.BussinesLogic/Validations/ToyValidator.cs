@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using FluentValidation;
-using People.Models;
+﻿using FluentValidation;
+using People.BussinesLogic.Blo.Models;
 
-namespace People.Validations;
+namespace People.BussinesLogic.Validations;
 
-public class ToyValidator : AbstractValidator<ToyDto>
+public class ToyValidator : AbstractValidator<ToyBlo>
 {
 	public ToyValidator()
 	{

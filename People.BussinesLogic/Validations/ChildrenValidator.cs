@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using FluentValidation;
-using People.Models;
+﻿using FluentValidation;
+using People.BussinesLogic.Blo.Models;
 
-namespace People.Validations;
+namespace People.BussinesLogic.Validations;
 
-public class ChildrenValidator : AbstractValidator<ChildrenDto>
+public class ChildrenValidator : AbstractValidator<ChildrenBlo>
 {
 	public ChildrenValidator()
 	{
