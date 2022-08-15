@@ -22,7 +22,7 @@ namespace People.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("People.DataAccess.Models.ChildrenRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.ChildrenRto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace People.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("PersonId")
+                    b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("SchoolNumber")
@@ -52,7 +52,7 @@ namespace People.DataAccess.Migrations
                     b.ToTable("Childrens", (string)null);
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.PersonRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.PersonRto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,13 +77,13 @@ namespace People.DataAccess.Migrations
                     b.ToTable("Persons", (string)null);
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.ToyRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.ToyRto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChildrenId")
+                    b.Property<Guid?>("ChildrenId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CountryOfManufacture")
@@ -106,34 +106,32 @@ namespace People.DataAccess.Migrations
                     b.ToTable("Toys", (string)null);
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.ChildrenRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.ChildrenRto", b =>
                 {
-                    b.HasOne("People.DataAccess.Models.PersonRto", "PersonRto")
+                    b.HasOne("People.DataAccess.Rto.Models.PersonRto", "PersonRto")
                         .WithMany("Childrens")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("PersonRto");
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.ToyRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.ToyRto", b =>
                 {
-                    b.HasOne("People.DataAccess.Models.ChildrenRto", "ChildrenRto")
+                    b.HasOne("People.DataAccess.Rto.Models.ChildrenRto", "ChildrenRto")
                         .WithMany("Toys")
                         .HasForeignKey("ChildrenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ChildrenRto");
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.ChildrenRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.ChildrenRto", b =>
                 {
                     b.Navigation("Toys");
                 });
 
-            modelBuilder.Entity("People.DataAccess.Models.PersonRto", b =>
+            modelBuilder.Entity("People.DataAccess.Rto.Models.PersonRto", b =>
                 {
                     b.Navigation("Childrens");
                 });
