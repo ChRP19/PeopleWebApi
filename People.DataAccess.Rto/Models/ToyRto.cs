@@ -7,6 +7,6 @@ public class ToyRto
     public string Manufacturer { get; set; }
     public string CountryOfManufacture { get; set; }
     
-    public Guid ChildrenId { get; set; }
-    public ChildrenRto ChildrenRto { get; set; }
+    public Guid? ChildrenId { get; set; }
+    public ChildrenRto? ChildrenRto { get; set; }
 }

@@ -8,8 +8,8 @@ public class ChildrenRto
     public DateTime DateOfBirth { get; set; }
     public int? SchoolNumber { get; set; }
     
-    public ICollection<ToyRto>? Toys { get; set; }
+    public ICollection<ToyRto> Toys { get; set; }
     
-    public Guid PersonId { get; set; }
-    public PersonRto PersonRto { get; set; }
+    public Guid? PersonId { get; set; }
+    public PersonRto? PersonRto { get; set; }
 }
