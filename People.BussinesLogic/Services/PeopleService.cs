@@ -34,11 +34,29 @@ public class PeopleService : IPeopleService
 	public async Task CreatePerson(PersonBlo person)
 	{
 		var result = _mapper.Map<PersonRto>(person);
-		await _repository.AddPerson(result);
+		await _repository.CreatePerson(result);
 	}
 	public async Task DeletePerson(int passport)
 	{
 		await _repository.DeletePerson(passport);
+	}
+	public async Task CreateChildren(ChildrenBlo children)
+	{
+		var result = _mapper.Map<ChildrenRto>(children);
+		await _repository.CreateChildren(result);
+	}
+	public async Task DeleteChildren(int birthСertificate)
+	{
+		await _repository.DeleteChildren(birthСertificate);
+	}
+	public async Task CreateToy(ToyBlo toy)
+	{
+		var result = _mapper.Map<ToyRto>(toy);
+		await _repository.CreateToy(result);
+	}
+	public async Task DeleteToy(int id)
+	{
+		await _repository.DeleteToy(id);
 	}
 
 }

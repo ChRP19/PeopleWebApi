@@ -32,7 +32,7 @@ public class PeopleRepository : IPeopleRepository
 			.AsNoTracking()
 			.ToList();
 	}
-	public async Task AddPerson(PersonRto person)
+	public async Task CreatePerson(PersonRto person)
 	{
 		_context.Persons.Add(person);
 		await _context.SaveChangesAsync();
@@ -44,6 +44,32 @@ public class PeopleRepository : IPeopleRepository
 			.SingleOrDefaultAsync(p => p.Passport == passport);
 		if (person is null) return;
 		_context.Persons.Remove(person);
+		await _context.SaveChangesAsync();
+	}
+	public async Task CreateChildren(ChildrenRto children)
+	{
+		_context.Children.Add(children);
+		await _context.SaveChangesAsync();
+	}
+	public async Task DeleteChildren(int birthСertificate)
+	{
+		var children = await _context.Children
+			.AsNoTracking()
+			.SingleOrDefaultAsync(c => c.BirthСertificate == birthСertificate);
+		if(children is null) return;
+		_context.Children.Remove(children);
+		await _context.SaveChangesAsync();
+	}
+	public async Task CreateToy(ToyRto toy)
+	{
+		_context.Toys.Add(toy);
+		await _context.SaveChangesAsync();
+	}
+	public async Task DeleteToy(int id)
+	{
+		var toy = await _context.Toys.FindAsync(id);
+		if (toy is null) return;
+		_context.Toys.Remove(toy);
 		await _context.SaveChangesAsync();
 	}
 

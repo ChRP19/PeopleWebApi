@@ -57,4 +57,34 @@ public class PeopleController : ControllerBase
 		}
 		return NotFound();
 	}
+	
+	[HttpPost("/api/v1/Children/Create")]
+	public async Task<ActionResult<PersonBlo>> CreateChildren(ChildrenBlo children)
+	{
+		await _service.CreateChildren(children);
+
+		return Created("", children);
+	}
+
+	[HttpDelete("/api/v1/Children/Delete/{birthCertificate}")]
+	public async Task<ActionResult> DeleteChildren(int birthCertificate)
+	{
+		await _service.DeletePerson(birthCertificate);
+		return Ok();
+	}
+	
+	[HttpPost("/api/v1/Toys/Create")]
+	public async Task<ActionResult<ToyBlo>> CreateToy(ToyBlo toy)
+	{
+		await _service.CreateToy(toy);
+
+		return Created("", toy);
+	}
+
+	[HttpDelete("/api/v1/Toys/Delete/{id}")]
+	public async Task<ActionResult> DeleteToy(int id)
+	{
+		await _service.DeleteToy(id);
+		return Ok();
+	}
 }

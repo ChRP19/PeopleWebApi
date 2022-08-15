@@ -7,7 +7,14 @@ public interface IPeopleRepository
 	Task<List<ChildrenRto>> GetChildrenList(int schoolNumber);
 	Task<PersonRto?> GetPerson(int passport);
 	Task<IEnumerable<PersonRto?>> GetAllPerson();
-	Task AddPerson(PersonRto person);
+	
+	Task CreatePerson(PersonRto person);
 	Task DeletePerson(int passport);
+
+	Task CreateChildren(ChildrenRto children);
+	Task DeleteChildren(int birthСertificate);
+
+	Task CreateToy(ToyRto toy);
+	Task DeleteToy(int id);
 
 }
