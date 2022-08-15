@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using People.BussinesLogic.Blo.Interfaces;
 using People.BussinesLogic.Blo.Models;
+using People.DataAccess.Rto.Models;
+using People.Models;
 
 namespace People.Controllers;
 
@@ -12,35 +15,41 @@ namespace People.Controllers;
 public class PeopleController : ControllerBase
 {
 	private readonly IPeopleService _service;
-	public PeopleController(IPeopleService service)
+	private readonly IMapper _mapper;
+	public PeopleController(IPeopleService service, IMapper mapper)
 	{
 		_service = service;
+		_mapper = mapper;
 	}
 
 	[HttpGet("/api/v1/Children")]
-	[ProducesResponseType(typeof(List<ChildrenBlo>), 200)]
+	[ProducesResponseType(typeof(List<ChildrenDto>), 200)]
 	[ProducesResponseType(404)]
-	public Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber)
+	public async Task<List<ChildrenDto>> GetChildrenList(int schoolNumber)
 	{
-		return _service.GetChildrenList(schoolNumber);
+		var result = _service.GetChildrenList(schoolNumber);
+		return _mapper.Map<List<ChildrenBlo>, List<ChildrenDto>>(await result);
 	}
 	
 	[HttpGet("/api/v1/Persons/{passport}")]
-	public async Task<PersonBlo> GetPerson(int passport)
+	public async Task<PersonDto> GetPerson(int passport)
 	{
-		return await _service.GetPerson(passport);
+		var result = _service.GetPerson(passport);
+		return _mapper.Map<PersonBlo, PersonDto>(await result);
 	}
 
 	[HttpGet("/api/v1/Persons")]
-	public async Task<IEnumerable<PersonBlo>> GetAllPersons()
+	public async Task<IEnumerable<PersonDto>> GetAllPersons()
 	{
-		return await _service.GetAllPerson();
+		var result = _service.GetAllPerson();
+		return _mapper.Map<IEnumerable<PersonBlo>, IEnumerable<PersonDto>>(await result);
 	}
 
 	[HttpPost("/api/v1/Persons/Create")]
-	public async Task<ActionResult<PersonBlo>> CreatePerson(PersonBlo person)
+	public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto person)
 	{
-		await _service.CreatePerson(person);
+		var result = _mapper.Map<PersonBlo>(person);
+		await _service.CreatePerson(result);
 
 		return CreatedAtAction(nameof(GetPerson), new { passport = person.Passport }, person);
 	}
@@ -59,11 +68,12 @@ public class PeopleController : ControllerBase
 	}
 	
 	[HttpPost("/api/v1/Children/Create")]
-	public async Task<ActionResult<PersonBlo>> CreateChildren(ChildrenBlo children)
+	public async Task<ActionResult<ChildrenDto>> CreateChildren(ChildrenDto children)
 	{
-		await _service.CreateChildren(children);
+		var result = _mapper.Map<ChildrenBlo>(children);
+		await _service.CreateChildren(result);
 
-		return Created("", children);
+		return Created("", result);
 	}
 
 	[HttpDelete("/api/v1/Children/Delete/{birthCertificate}")]
@@ -74,9 +84,10 @@ public class PeopleController : ControllerBase
 	}
 	
 	[HttpPost("/api/v1/Toys/Create")]
-	public async Task<ActionResult<ToyBlo>> CreateToy(ToyBlo toy)
+	public async Task<ActionResult<ToyDto>> CreateToy(ToyDto toy)
 	{
-		await _service.CreateToy(toy);
+		var result = _mapper.Map<ToyBlo>(toy);
+		await _service.CreateToy(result);
 
 		return Created("", toy);
 	}
