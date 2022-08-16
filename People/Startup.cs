@@ -1,13 +1,15 @@
 using System;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using People.BussinesLogic.Blo.Interfaces;
+using People.BussinesLogic.Blo.Models;
 using People.BussinesLogic.Services;
+using People.BussinesLogic.Validations;
 using People.DataAccess.Contexts;
 using People.DataAccess.Repositories;
 using People.DataAccess.Rto.Interfaces;
@@ -37,12 +39,8 @@ namespace People
 					document.Info.Description = "A simple ASP.NET Core web API";
 				};
 			});
-			// services.AddSwaggerGen(c =>
-			// {
-			// 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "People", Version = "v1" });
-			// });
-			
-			string connectionString = Configuration.GetConnectionString(nameof(SqlPeopleContext));
+
+			var connectionString = Configuration.GetConnectionString(nameof(SqlPeopleContext));
 
 			services.AddDbContext<SqlPeopleContext>(builder =>
 					builder.UseSqlServer(connectionString, options =>
@@ -57,6 +55,10 @@ namespace People
 
 			services.AddScoped<IPeopleRepository, PeopleRepository>();
 			services.AddScoped<IPeopleService, PeopleService>();
+
+			services.AddScoped<IValidator<PersonBlo>, PersonValidator>();
+			services.AddScoped<IValidator<ChildrenBlo>, ChildrenValidator>();
+			services.AddScoped<IValidator<ToyBlo>, ToyValidator>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,9 +68,6 @@ namespace People
 			{
 				app.UseOpenApi();
 				app.UseSwaggerUi3();
-				// app.UseDeveloperExceptionPage();
-				// app.UseSwagger();
-				// app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "People v1"));
 			}
 
 			app.UseHttpsRedirection();
