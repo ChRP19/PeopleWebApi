@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using People.BussinesLogic.Blo.Interfaces;
 using People.BussinesLogic.Blo.Models;
-using People.DataAccess.Rto.Models;
 using People.Models;
 
 namespace People.Controllers;
@@ -46,12 +44,16 @@ public class PeopleController : ControllerBase
 	}
 
 	[HttpPost("/api/v1/Persons/Create")]
-	public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto person)
+	public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto personDto)
 	{
-		var result = _mapper.Map<PersonBlo>(person);
-		await _service.CreatePerson(result);
-
-		return CreatedAtAction(nameof(GetPerson), new { passport = person.Passport }, person);
+		var personBlo = _mapper.Map<PersonBlo>(personDto);
+		string msg = await _service.CreatePerson(personBlo);
+		if (msg is not "")
+		{
+			return BadRequest(msg);
+		}
+		
+		return CreatedAtAction(nameof(GetPerson), new { passport = personDto.Passport }, personDto);
 	}
 
 	[HttpDelete("/api/v1/Persons/Delete/{passport}")]
@@ -68,12 +70,16 @@ public class PeopleController : ControllerBase
 	}
 	
 	[HttpPost("/api/v1/Children/Create")]
-	public async Task<ActionResult<ChildrenDto>> CreateChildren(ChildrenDto children)
+	public async Task<ActionResult<ChildrenDto>> CreateChildren(ChildrenDto childrenDto)
 	{
-		var result = _mapper.Map<ChildrenBlo>(children);
-		await _service.CreateChildren(result);
+		var childrenBlo = _mapper.Map<ChildrenBlo>(childrenDto);
+		string msg = await _service.CreateChildren(childrenBlo);
+		if (msg is not "")
+		{
+			return BadRequest(msg);
+		}
 
-		return Created("", result);
+		return Created("", childrenBlo);
 	}
 
 	[HttpDelete("/api/v1/Children/Delete/{birthCertificate}")]
@@ -87,7 +93,11 @@ public class PeopleController : ControllerBase
 	public async Task<ActionResult<ToyDto>> CreateToy(ToyDto toy)
 	{
 		var result = _mapper.Map<ToyBlo>(toy);
-		await _service.CreateToy(result);
+		string msg = await _service.CreateToy(result);
+		if (msg is not "")
+		{
+			return BadRequest(msg);
+		}
 
 		return Created("", toy);
 	}

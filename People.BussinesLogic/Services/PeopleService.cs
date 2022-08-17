@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using People.BussinesLogic.Blo.Interfaces;
 using People.BussinesLogic.Blo.Models;
 using People.DataAccess.Rto.Interfaces;
@@ -10,10 +11,17 @@ public class PeopleService : IPeopleService
 {
 	private readonly IPeopleRepository _repository;
 	private readonly IMapper _mapper;
-	public PeopleService(IPeopleRepository repository, IMapper mapper)
+	
+	private IValidator<ChildrenBlo> _childrenValidator;
+	private IValidator<PersonBlo> _personValidator;
+	private IValidator<ToyBlo> _toyValidator;
+	public PeopleService(IPeopleRepository repository, IMapper mapper, IValidator<ChildrenBlo> childrenValidator, IValidator<PersonBlo> personValidator, IValidator<ToyBlo> toyValidator)
 	{
 		_repository = repository;
 		_mapper = mapper;
+		_childrenValidator = childrenValidator;
+		_personValidator = personValidator;
+		_toyValidator = toyValidator;
 	}
 	
 	public async Task<List<ChildrenBlo>> GetChildrenList(int schoolNumber)
@@ -31,28 +39,52 @@ public class PeopleService : IPeopleService
 		var result = _repository.GetAllPerson();
 		return _mapper.Map<IEnumerable<PersonRto>, IEnumerable<PersonBlo>>(await result);
 	}
-	public async Task CreatePerson(PersonBlo person)
+	public async Task<string> CreatePerson(PersonBlo personBlo)
 	{
-		var result = _mapper.Map<PersonRto>(person);
-		await _repository.CreatePerson(result);
+		var result = await _personValidator.ValidateAsync(personBlo);
+
+		if(!result.IsValid)
+		{
+			return result.Errors.FirstOrDefault()!.ErrorMessage;
+		}
+		var personRto = _mapper.Map<PersonRto>(personBlo);
+		await _repository.CreatePerson(personRto);
+
+		return string.Empty;
 	}
 	public async Task DeletePerson(int passport)
 	{
 		await _repository.DeletePerson(passport);
 	}
-	public async Task CreateChildren(ChildrenBlo children)
+	public async Task<string> CreateChildren(ChildrenBlo childrenBlo)
 	{
-		var result = _mapper.Map<ChildrenRto>(children);
-		await _repository.CreateChildren(result);
+		var result = await _childrenValidator.ValidateAsync(childrenBlo);
+
+		if(!result.IsValid)
+		{
+			return result.Errors.FirstOrDefault()!.ErrorMessage;
+		}
+		var childrenRto = _mapper.Map<ChildrenRto>(childrenBlo);
+		await _repository.CreateChildren(childrenRto);
+		
+		return string.Empty;
 	}
 	public async Task DeleteChildren(int birthСertificate)
 	{
 		await _repository.DeleteChildren(birthСertificate);
 	}
-	public async Task CreateToy(ToyBlo toy)
+	public async Task<string> CreateToy(ToyBlo toyBlo)
 	{
-		var result = _mapper.Map<ToyRto>(toy);
-		await _repository.CreateToy(result);
+		var result = await _toyValidator.ValidateAsync(toyBlo);
+
+		if(!result.IsValid)
+		{
+			return result.Errors.FirstOrDefault()!.ErrorMessage;
+		}
+		var toyRto = _mapper.Map<ToyRto>(toyBlo);
+		await _repository.CreateToy(toyRto);
+		
+		return string.Empty;
 	}
 	public async Task DeleteToy(int id)
 	{
