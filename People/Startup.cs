@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,9 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using People.BussinesLogic.Blo.Interfaces;
-using People.BussinesLogic.Blo.Models;
 using People.BussinesLogic.Services;
-using People.BussinesLogic.Validations;
 using People.DataAccess.Contexts;
 using People.DataAccess.Repositories;
 using People.DataAccess.Rto.Interfaces;
@@ -29,7 +28,7 @@ namespace People
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers().ConfigureApiBehaviorOptions(x => { x.SuppressMapClientErrors = true; });
-			
+
 			services.AddSwaggerDocument(config =>
 			{
 				config.PostProcess = document =>
@@ -56,9 +55,7 @@ namespace People
 			services.AddScoped<IPeopleRepository, PeopleRepository>();
 			services.AddScoped<IPeopleService, PeopleService>();
 
-			services.AddScoped<IValidator<PersonBlo>, PersonValidator>();
-			services.AddScoped<IValidator<ChildrenBlo>, ChildrenValidator>();
-			services.AddScoped<IValidator<ToyBlo>, ToyValidator>();
+			services.AddValidatorsFromAssembly(Assembly.Load("People.BussinesLogic"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
