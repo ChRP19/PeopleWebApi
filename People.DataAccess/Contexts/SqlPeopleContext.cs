@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using People.DataAccess.Configurations;
 using People.DataAccess.Rto.Models;
 
 namespace People.DataAccess.Contexts;
