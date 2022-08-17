@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using People.BussinesLogic.Blo.Models;
 
-namespace People.BussinesLogic.Validations;
+namespace People.BussinesLogic.Validators;
 
 public class PersonValidator : AbstractValidator<PersonBlo>
 {
@@ -10,7 +10,7 @@ public class PersonValidator : AbstractValidator<PersonBlo>
 		const string msg = "Error in field {PropertyName}: value {PropertyValue}";
 		
 		RuleFor(p => p.Name)
-			.Length(0, 256)
+			.Length(1, 256)
 			.WithMessage(msg)
 			.Must(p => p.All(char.IsLetter))
 			.WithMessage(msg);
