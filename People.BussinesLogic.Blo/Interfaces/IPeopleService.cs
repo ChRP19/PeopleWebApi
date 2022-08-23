@@ -8,12 +8,12 @@ public interface IPeopleService
 	Task<PersonBlo?> GetPerson(int passport);
 	Task<IEnumerable<PersonBlo?>> GetAllPerson();
 	
-	Task<string> CreatePerson(PersonBlo person);
+	Task CreatePerson(PersonBlo person);
 	Task DeletePerson(int passport);
 	
-	Task<string> CreateChildren(ChildrenBlo children);
+	Task CreateChildren(ChildrenBlo children);
 	Task DeleteChildren(int birthСertificate);
 
-	Task<string> CreateToy(ToyBlo toy);
+	Task CreateToy(ToyBlo toy);
 	Task DeleteToy(int id);
 }
