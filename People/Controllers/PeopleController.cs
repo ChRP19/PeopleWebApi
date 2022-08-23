@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using People.BussinesLogic.Blo.Interfaces;
 using People.BussinesLogic.Blo.Models;
 using People.Models;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace People.Controllers;
 
@@ -25,32 +28,35 @@ public class PeopleController : ControllerBase
 	[ProducesResponseType(404)]
 	public async Task<List<ChildrenDto>> GetChildrenList(int schoolNumber)
 	{
-		var result = _service.GetChildrenList(schoolNumber);
-		return _mapper.Map<List<ChildrenBlo>, List<ChildrenDto>>(await result);
+		var result = await _service.GetChildrenList(schoolNumber);
+		return _mapper.Map<List<ChildrenBlo>, List<ChildrenDto>>(result);
 	}
 	
 	[HttpGet("/api/v1/Persons/{passport}")]
 	public async Task<PersonDto> GetPerson(int passport)
 	{
-		var result = _service.GetPerson(passport);
-		return _mapper.Map<PersonBlo, PersonDto>(await result);
+		var result = await _service.GetPerson(passport);
+		return _mapper.Map<PersonBlo, PersonDto>(result);
 	}
 
 	[HttpGet("/api/v1/Persons")]
 	public async Task<IEnumerable<PersonDto>> GetAllPersons()
 	{
-		var result = _service.GetAllPerson();
-		return _mapper.Map<IEnumerable<PersonBlo>, IEnumerable<PersonDto>>(await result);
+		var result = await _service.GetAllPerson();
+		return _mapper.Map<IEnumerable<PersonBlo>, IEnumerable<PersonDto>>(result);
 	}
 
 	[HttpPost("/api/v1/Persons/Create")]
 	public async Task<ActionResult<PersonDto>> CreatePerson(PersonDto personDto)
 	{
 		var personBlo = _mapper.Map<PersonBlo>(personDto);
-		string msg = await _service.CreatePerson(personBlo);
-		if (msg is not "")
+		try
 		{
-			return BadRequest(msg);
+			await _service.CreatePerson(personBlo);
+		}
+		catch (ValidationException e)
+		{
+			return BadRequest(e.Errors.Select(x => x.ErrorMessage));
 		}
 		
 		return CreatedAtAction(nameof(GetPerson), new { passport = personDto.Passport }, personDto);
@@ -73,10 +79,13 @@ public class PeopleController : ControllerBase
 	public async Task<ActionResult<ChildrenDto>> CreateChildren(ChildrenDto childrenDto)
 	{
 		var childrenBlo = _mapper.Map<ChildrenBlo>(childrenDto);
-		string msg = await _service.CreateChildren(childrenBlo);
-		if (msg is not "")
+		try
 		{
-			return BadRequest(msg);
+			await _service.CreateChildren(childrenBlo);
+		}
+		catch (ValidationException e)
+		{
+			return BadRequest(e.Errors.Select(x => x.ErrorMessage));
 		}
 
 		return Created("", childrenBlo);
@@ -93,10 +102,13 @@ public class PeopleController : ControllerBase
 	public async Task<ActionResult<ToyDto>> CreateToy(ToyDto toy)
 	{
 		var result = _mapper.Map<ToyBlo>(toy);
-		string msg = await _service.CreateToy(result);
-		if (msg is not "")
+		try
 		{
-			return BadRequest(msg);
+			await _service.CreateToy(result);
+		}
+		catch (ValidationException e)
+		{
+			return BadRequest(e.Errors.Select(x => x.ErrorMessage));
 		}
 
 		return Created("", toy);
