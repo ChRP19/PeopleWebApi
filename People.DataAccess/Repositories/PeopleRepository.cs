@@ -56,7 +56,7 @@ public class PeopleRepository : IPeopleRepository
 		var children = await _context.Children
 			.AsNoTracking()
 			.SingleOrDefaultAsync(c => c.BirthСertificate == birthСertificate);
-		if(children is null) return;
+		if (children is null) return;
 		_context.Children.Remove(children);
 		await _context.SaveChangesAsync();
 	}
