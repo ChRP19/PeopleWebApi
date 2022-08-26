@@ -12,6 +12,7 @@ using People.BussinesLogic.Services;
 using People.DataAccess.Contexts;
 using People.DataAccess.Repositories;
 using People.DataAccess.Rto.Interfaces;
+using People.Middleware;
 
 namespace People
 {
@@ -71,6 +72,8 @@ namespace People
 			app.UseRouting();
 			app.UseAuthorization();
 
+			app.UseMiddleware<ApiKeyMiddleware>();
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
