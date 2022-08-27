@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using People.BussinesLogic.Blo.Interfaces;
 using People.BussinesLogic.Blo.Models;
@@ -11,8 +11,8 @@ using ValidationException = FluentValidation.ValidationException;
 
 namespace People.Controllers;
 
-[ApiController]
 [Route("[controller]")]
+[ApiController]
 public class PeopleController : ControllerBase
 {
 	private readonly IPeopleService _service;
@@ -40,6 +40,7 @@ public class PeopleController : ControllerBase
 	}
 
 	[HttpGet("/api/v1/Persons")]
+	[Authorize(Roles = "Administrator")]
 	public async Task<IEnumerable<PersonDto>> GetAllPersons()
 	{
 		var result = await _service.GetAllPerson();
